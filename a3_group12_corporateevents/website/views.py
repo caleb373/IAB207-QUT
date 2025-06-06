@@ -133,3 +133,6 @@ def cancel_event(event_id):
     db.session.commit()
     return redirect(url_for('main.event_history'))
 
+@main_bp.route("/force-error")
+def force_error():
+    raise Exception("This is a test error!")

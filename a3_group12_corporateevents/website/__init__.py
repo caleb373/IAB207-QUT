@@ -4,6 +4,7 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+from flask import Flask, render_template
 
 bcrypt = Bcrypt() 
 db = SQLAlchemy()
@@ -12,8 +13,10 @@ db = SQLAlchemy()
 # a web server will run this web application
 def create_app():
   
+  
     app = Flask(__name__)  # this is the name of the module/package that is calling this app
     # Should be set to false in a production environment
+    
     app.debug = True
     app.secret_key = 'somesecretkey'
     # set the app configuration data 
@@ -26,6 +29,8 @@ def create_app():
     bcrypt.init_app(app)
 
     Bootstrap5(app)
+
+    
     
     # initialise the login manager
     login_manager = LoginManager()
@@ -48,4 +53,18 @@ def create_app():
     from . import auth
     app.register_blueprint(auth.auth_bp)
     
+      
+   # 404 Error Handeling Setup
+    @app.errorhandler(404)
+    def page_not_found(e):
+       return render_template("404.html"), 404
+
+   # 500 Error Handeling Setup
+    @app.errorhandler(500)
+    def internal_error(e):
+        return render_template("500.html"), 500
+
+    
     return app
+
+
